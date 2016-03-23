@@ -4,7 +4,7 @@ class Sidekiq::Logging::Json::Middleware
   end
 
   def call(worker, item, queue)
-    logger.info parameters: item['args']
+    Sidekiq.logger.info parameters: item['args']
     yield
   end
 end
