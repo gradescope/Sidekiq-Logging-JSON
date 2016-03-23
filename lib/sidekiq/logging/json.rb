@@ -24,29 +24,31 @@ module Sidekiq
         end
 
         def process_message(severity, time, program_name, message)
-          return { :job_status => 'exception' } if message.is_a?(Exception)
-
-          if message.is_a? Hash
+          h = {}
+          if message.is_a? Exception
+            h[:job_status] = 'exception'
+          elsif message.is_a? Hash
             if message["retry"]
-              job_status = "retry"
-              msg = "#{message['class']} failed, retrying with args #{message['args']}."
+              h[:job_status] = "retry"
+              h[:status_message] = "#{message['class']} failed, retrying with args #{message['args']}."
             else
-              job_status = "dead"
-              msg = "#{message['class']} failed with args #{message['args']}, not retrying."
+              h[:job_status] = "dead"
+              h[:status_message] = "#{message['class']} failed with args #{message['args']}, not retrying."
             end
+
+            h[:job_params] = message[:parameters] if message[:parameters]
+
             return {
               :job_status => job_status,
               :status_message => "#{msg}"
             }.merge(message[:parameters] || {})
+          else
+            result = message.split(" ")
+            status = result[0].match(/^(start|done|fail):?$/) || []
+            h[:job_status] = status[1]
+            h[:run_time] = status[1] && result[1] && result[1].to_f   # run time in seconds
           end
-
-          result = message.split(" ")
-          job_status = result[0].match(/^(start|done|fail):?$/) || []
-
-          {
-            job_status: job_status[1],                                   # start or done
-            run_time: status[1] && result[1] && result[1].to_f   # run time in seconds
-          }
+          return h
         end
       end
     end
