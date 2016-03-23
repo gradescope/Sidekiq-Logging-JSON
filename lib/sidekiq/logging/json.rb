@@ -37,7 +37,7 @@ module Sidekiq
             return {
               :status => status,
               :status_message => "#{msg}"
-            }
+            }.merge(message[:parameters] || {})
           end
 
           result = message.split(" ")
