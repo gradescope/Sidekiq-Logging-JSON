@@ -37,11 +37,6 @@ module Sidekiq
             end
 
             h[:job_params] = message[:parameters] if message[:parameters]
-
-            return {
-              :job_status => job_status,
-              :status_message => "#{msg}"
-            }.merge(message[:parameters] || {})
           else
             result = message.split(" ")
             status = result[0].match(/^(start|done|fail):?$/) || []
