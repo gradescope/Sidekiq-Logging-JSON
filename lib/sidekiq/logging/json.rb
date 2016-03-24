@@ -39,6 +39,12 @@ module Sidekiq
               h[:job_params] = message[:job_params]
               h[:job_status] = 'init'
             end
+
+            if message[:exception] # Intercepted through our error handler
+              h[:job_status] = 'exception'
+              h[:status_message] = "#{message[:exception][:name]}: #{message[:exception][:message]}"
+              h[:exception] = message[:exception]
+            end
           else
             result = message.split(" ")
             status = result[0].match(/^(start|done|fail):?$/) || []

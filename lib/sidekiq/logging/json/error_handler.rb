@@ -4,11 +4,13 @@
 class Sidekiq::Logging::Json::ExceptionLogger
   def call(ex, ctxHash)
     logdata = {
-      exception: ex.class.name,
-      exception_message: ex.message
+      exception: {
+        name: ex.class.name,
+        message: ex.message
+      }
     }
     logdata.merge! ctxHash unless ctxHash.empty?
-    logdata[:backtrace] = ex.backtrace.join("\n") unless ex.backtrace.nil?
+    logdata[:exception][:backtrace] = ex.backtrace.join("\n") unless ex.backtrace.nil?
     Sidekiq.logger.warn logdata
   end
 
