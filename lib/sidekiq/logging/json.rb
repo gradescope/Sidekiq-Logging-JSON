@@ -37,6 +37,7 @@ module Sidekiq
             if message[:job_params]
               h[:status_message] = "Parameters"
               h[:job_params] = message[:job_params]
+              h[:job_status] = 'init'
             end
           else
             result = message.split(" ")
