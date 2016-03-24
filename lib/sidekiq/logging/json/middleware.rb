@@ -1,10 +1,12 @@
+# Middleware for improving Sidekiq logging with Logstash
 class Sidekiq::Logging::Json::Middleware
-  # Logs job parameters to Logstash
   def initialize
   end
 
+  # Logs job parameters to Logstash
   def call(worker, item, queue)
-    worker.logger.info parameters: item['args']
+    params = worker.class.instance_method(:perform).parameters.map { |x| x[1] }
+    worker.logger.info job_params: params.zip(item['args']).to_h
     yield
   end
 end

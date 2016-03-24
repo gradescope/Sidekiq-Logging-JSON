@@ -31,12 +31,12 @@ module Sidekiq
             if message["retry"]
               h[:job_status] = "retry"
               h[:status_message] = "#{message['class']} failed, retrying with args #{message['args']}."
-            else
-              h[:job_status] = "dead"
-              h[:status_message] = "#{message['class']} failed with args #{message['args']}, not retrying."
             end
-
-            h[:job_params] = message[:parameters] if message[:parameters]
+            h[:worker] = message['class'] if message['class']
+            if message[:job_params]
+              h[:status_message] = "Parameters"
+              h[:job_params] = message[:job_params]
+            end
           else
             result = message.split(" ")
             status = result[0].match(/^(start|done|fail):?$/) || []
