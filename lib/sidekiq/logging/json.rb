@@ -43,7 +43,7 @@ module Sidekiq
             if message[:exception] # Intercepted through our error handler
               h[:job_status] = 'exception'
               h[:status_message] = "#{message[:exception][:name]}: #{message[:exception][:message]}"
-              h[:exception] = message[:exception]
+              h[:sidekiq_exception] = message[:exception]
             end
           else
             result = message.split(" ")
