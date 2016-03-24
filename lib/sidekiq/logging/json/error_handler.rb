@@ -12,8 +12,15 @@ class Sidekiq::Logging::Json::ExceptionLogger
     Sidekiq.logger.warn logdata
   end
 
-  # Remove the default Sidekiq exception logger
-  Sidekiq.error_handlers.select! { |handler| handler.class != Sidekiq::ExceptionHandler::Logger }
+
+  def install
   # Set up our handler instead
-  Sidekiq.error_handlers << Sidekiq::Logging::Json::ExceptionLogger.new
+    Sidekiq.error_handlers << self
+  end
+
+  def self.remove_default_logger
+    # Remove the default Sidekiq exception logger
+    Sidekiq.error_handlers.select! { |handler| handler.class != Sidekiq::ExceptionHandler::Logger }
+  end
+
 end
