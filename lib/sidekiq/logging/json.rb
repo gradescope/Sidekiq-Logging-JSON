@@ -16,6 +16,7 @@ module Sidekiq
             :program_name => program_name,
             :worker => "#{context}".split(" ")[0],
             :type => 'sidekiq',
+            :job_id => "#{context}".split(" ")[1],
             :job_status => nil,
             :severity => severity,
             :run_time => nil,
