@@ -3,6 +3,8 @@ This project is **no longer maintained**.
 If you're interested in taking it over, we'd love to hear from you.
 Email [developers@springest.com](mailto:developers@springest.com), or check out one of its maintained forks.
 
+*This fork is maintained by Gradescope for our own purposes, you may find our additions and changes useful but no guarantee of maintenance is made at this time.*
+
 *****
 
 # Sidekiq::Logging::Json
